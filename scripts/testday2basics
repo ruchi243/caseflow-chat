@@ -1,0 +1,72 @@
+"""
+Test Day 2 basics
+"""
+import sys
+import os
+
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, project_root)
+
+from app.services.llm_service import ollama_service
+from app.utils.chunking import chunk_text, chunk_by_sentences
+
+
+def test_ollama():
+    """Test Ollama connection"""
+    print("🧪 Testing Ollama...")
+    
+    try:
+        response = ollama_service.generate(
+            prompt="Say 'Hello from Ollama!' in one sentence.",
+            system_prompt="You are a helpful assistant."
+        )
+        print(f"✅ Ollama response: {response}\n")
+    except Exception as e:
+        print(f"❌ Ollama error: {e}\n")
+
+
+def test_embeddings():
+    """Test embedding generation"""
+    print("🧪 Testing Embeddings...")
+    
+    try:
+        text = "This is a test document for H-1B visa application."
+        embedding = ollama_service.generate_embedding(text)
+        print(f"✅ Generated embedding with {len(embedding)} dimensions")
+        print(f"   First 5 values: {embedding[:5]}\n")
+    except Exception as e:
+        print(f"❌ Embedding error: {e}\n")
+
+
+def test_chunking():
+    """Test text chunking"""
+    print("🧪 Testing Chunking...")
+    
+    sample_text = """
+    This is a sample immigration document. The H-1B visa is a non-immigrant visa 
+    that allows US companies to employ foreign workers in specialty occupations. 
+    It requires theoretical and practical application of specialized knowledge. 
+    The petitioner must demonstrate that the position qualifies as a specialty occupation.
+    """
+    
+    chunks = chunk_text(sample_text, chunk_size=15, overlap=5)
+    
+    print(f"✅ Created {len(chunks)} chunks:")
+    for i, chunk in enumerate(chunks, 1):
+        print(f"\n   Chunk {i}: {chunk[:80]}...")
+    
+    print("\n")
+
+
+if __name__ == "__main__":
+    print("="*60)
+    print("DAY 2 BASIC TESTS")
+    print("="*60 + "\n")
+    
+    test_ollama()
+    test_embeddings()
+    test_chunking()
+    
+    print("="*60)
+    print("✅ Day 2 basics working!")
+    print("="*60)
