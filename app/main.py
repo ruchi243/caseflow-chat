@@ -2,24 +2,25 @@
 FastAPI application entry point
 """
 from fastapi import FastAPI
-from app.models.base import Base, engine
-from app.api import cases  # Import router
+from app.models import base
+from app.api import cases, documents  # Add documents
 
 # Create tables on startup
-Base.metadata.create_all(bind=engine)
+base.Base.metadata.create_all(bind=base.engine)
 
-# Create FastAPI app
 app = FastAPI(
     title="Caseflow Chat API",
     description="Immigration case intake system with AI",
     version="1.0.0"
 )
+
+# Include routers
 app.include_router(cases.router)
+app.include_router(documents.router)  # Add this
 
 
 @app.get("/")
 def root():
-    """Health check endpoint"""
     return {
         "message": "Caseflow Chat API",
         "status": "running",
@@ -29,5 +30,4 @@ def root():
 
 @app.get("/health")
 def health():
-    """Detailed health check"""
     return {"status": "healthy"}
