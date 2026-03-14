@@ -12,7 +12,7 @@ class OllamaService:
     
     def __init__(self):
         self.client = Client(host=settings.ollama_host)
-        self.model = "llama3.1"  # Default model
+        self.model = "llama3.2"  # Default model
     
     def generate(self, prompt: str, system_prompt: str = "") -> str:
         """

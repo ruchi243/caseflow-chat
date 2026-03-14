@@ -63,7 +63,10 @@ class RAGService:
         # Get or create collection
         self.collection = self.client.get_or_create_collection(
             name="immigration_knowledge",
-            metadata={"description": "Immigration law and case documents"}
+            metadata={
+                "description": "Immigration law and case documents",
+                "hnsw:space": "cosine"
+            }
         )
     
     def add_document_chunks(
@@ -162,9 +165,18 @@ class RAGService:
                 text = results['documents'][0][i]
                 metadata = results['metadatas'][0][i]
                 distance = results['distances'][0][i]
+               # print(f"DEBUG raw distance: {distance}, type: {type(distance)}")  # ADD THIS
+
                 
                 # Convert distance to confidence (closer = higher confidence)
-                confidence = max(0, 1 - (distance / 2))
+                # Convert distance to confidence
+                # ChromaDB distance is usually 0-2, where 0 = perfect match
+                # ChromaDB with L2 distance returns large values (not 0-2)
+# We normalize using a sigmoid-style approach
+                if distance is not None and distance >= 0:
+                    confidence = round(1.0 / (1.0 + distance), 4)
+                else:
+                    confidence = 0.0
                 
                 citation = Citation(
                     source_doc=metadata.get('source_doc', 'Unknown'),
@@ -172,7 +184,7 @@ class RAGService:
                     page=metadata.get('page', 0),
                     section=metadata.get('section', 'main'),
                     chunk_index=metadata.get('chunk_index', i),
-                    confidence=round(confidence, 2),
+                    confidence=confidence,
                     text=text
                 )
                 
