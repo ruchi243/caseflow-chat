@@ -15,6 +15,11 @@ attached to every answer.
 - Confidence scores above 0.65 on all retrieved answers
 - All client data stays on-premises. No cloud, no privacy concerns
 
+## architectural diagram 
+
+<img width="1024" height="572" alt="image" src="https://github.com/user-attachments/assets/3899834b-4bed-4995-a3a1-c13cf74e83c2" />
+
+
 ## how it works
 
 The interesting part is not the chatbot. It is what happens under the hood.
