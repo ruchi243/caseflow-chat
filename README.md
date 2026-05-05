@@ -57,7 +57,7 @@ API at `localhost:8000` · UI at `localhost:8501`
 
 ## demo
 
-Video demo coming soon.
+https://drive.google.com/file/d/1Lc9YuhqA2-QWiCOskLiRe7cAKIuryJmW/preview
 
 ---
 
